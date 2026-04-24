@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 사이드 프로젝트 포트폴리오</title>
+    <style>
+        :root {
+            --bg-color: #fdfaf5;
+            --card-bg: #ffffff;
+            --accent-color: #ff9d76;
+            --text-main: #4a4a4a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Pretendard', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 헤더 섹션 (날짜 & 시간) */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        #clock {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        #date {
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        /* 프로젝트 리스트 */
+        .project-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* 카드 디자인 (클레이모피즘 스타일) */
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 10px 10px 20px #e0dcd4, -10px -10px 20px #ffffff;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .project-icon {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+            filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.1));
+        }
+
+        .project-card h3 {
+            margin: 10px 0;
+            font-size: 1.4rem;
+        }
+
+        .project-card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div id="clock">00:00:00</div>
+        <div id="date">2026. 04. 24. 금요일</div>
+    </header>
+
+    <main class="project-container">
+        <section class="project-card">
+            <img src="project1-icon.png" alt="프로젝트1" class="project-icon">
+            <h3>🎨 판타지 소설 집필</h3>
+            <p>한국 무속 신앙과 예술 복원가 이야기를 다룬 단편 판타지 소설</p>
+        </section>
+
+        <section class="project-card">
+            <img src="project2-icon.png" alt="프로젝트2" class="project-icon">
+            <h3>🥕 캐롯 델타</h3>
+            <p>델타 포스 게임 플레이를 기록하는 유튜브 채널 프로젝트</p>
+        </section>
+
+        <section class="project-card">
+            <img src="project3-icon.png" alt="프로젝트3" class="project-icon">
+            <h3>🛡️ 안전 비서 앱</h3>
+            <p>심리적 안정과 위험 상황 대응을 돕는 안드로이드 애플리케이션</p>
+        </section>
+    </main>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            
+            // 시간 업데이트
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+
+            // 날짜 업데이트
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('date').textContent = now.toLocaleDateString('ko-KR', options);
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
