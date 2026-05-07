@@ -7,26 +7,7 @@
 
 | 업로드 주기 | 매주 1개 씩 |
 |----------|------|
-| 뷰티 & 스킨케어 | 스킨케어, 메이크업, 헤어케어 등 |
-- [x] #739
-- [ ] https://github.com/octo-org/octo-repo/issues/740
-- [ ] Add delight to the experience when all tasks are complete :tada:
-
-> [!NOTE]
-> Useful information that users should know, even when skimming content.
-
-> [!TIP]
-> Helpful advice for doing things better or more easily.
-
-> [!IMPORTANT]
-> Key information users need to know to achieve their goal.
-
-> [!WARNING]
-> Urgent info that needs immediate user attention to avoid problems.
-
-> [!CAUTION]
-> Advises about risks or negative outcomes of certain actions.
-
+|  |  |
 
 ## 📁 카테고리 종류
 
