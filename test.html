@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OTEW — One Thing Every Week</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: linear-gradient(180deg, #f5fcff 0%, #eaf9ff 100%);
+      color: #16334a;
+    }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+    header {
+      margin-bottom: 28px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 38px;
+      font-weight: 800;
+    }
+    .subtitle {
+      margin-top: 8px;
+      color: #4c718a;
+      line-height: 1.6;
+    }
+    .search {
+      margin-top: 24px;
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 16px;
+      border: 1px solid #d4edf7;
+      background: white;
+      font-size: 15px;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      border: 0;
+      background: white;
+      border-radius: 999px;
+      padding: 9px 14px;
+      cursor: pointer;
+      color: #4c718a;
+      font-size: 14px;
+    }
+    .chip.active {
+      background: #dff6ff;
+      color: #0d4f73;
+      font-weight: 600;
+    }
+    .sort {
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid #d4edf7;
+      background: white;
+    }
+    .grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card {
+      background: rgba(255,255,255,0.92);
+      border-radius: 22px;
+      padding: 18px;
+      border: 1px solid #dff1f8;
+      min-height: 220px;
+      box-shadow: 0 8px 24px rgba(22, 51, 74, 0.04);
+      transition: transform .2s ease;
+    }
+    .card:hover { transform: translateY(-3px); }
+    .card { cursor: pointer; }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(22,51,74,.22);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 20;
+    }
+    .modal.open { display: flex; }
+    .modal-panel {
+      width: min(920px, 100%);
+      background: white;
+      border-radius: 28px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 24px;
+      box-shadow: 0 18px 48px rgba(22,51,74,.12);
+    }
+    .modal-link {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #eefaff;
+      color: #0d4f73;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .modal-close {
+      border: 0;
+      background: #eefaff;
+      border-radius: 12px;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-left: auto;
+      display: block;
+    }
+    .emoji { font-size: 24px; }
+    .title {
+      margin-top: 12px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .desc {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #56778d;
+    }
+    .meta {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #6f8ea3;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .tag {
+      font-size: 12px;
+      background: #eefaff;
+      color: #2d6988;
+      padding: 5px 8px;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>OTEW 🐠</h1>
+      <p class="subtitle">
+        One Thing Every Week — 매주 하나씩 만들고 기록하는 작은 작업실.
+      </p>
+
+      <input id="searchInput" class="search" type="text" placeholder="프로젝트 검색" />
+
+      <div class="toolbar">
+        <div class="chips">
+          <button class="chip active">전체</button>
+          <button class="chip">웹</button>
+          <button class="chip">네이티브</button>
+          <button class="chip">실험</button>
+          <button class="chip">툴</button>
+        </div>
+
+        <select id="sortSelect" class="sort">
+          <option>최신순</option>
+          <option>조회수 높은 순</option>
+        </select>
+      </div>
+    </header>
+
+    <section id="projectGrid" class="grid">
+      <article class="card" data-category="웹" data-date="202605" data-views="82">
+        <div class="emoji">🐟</div>
+        <div class="title">퇴근 안전 알림</div>
+        <div class="desc">퇴근 전에 안전 습관을 챙겨주는 작은 리마인더 앱.</div>
+        <div class="meta">2026.05 · 4일</div>
+        <div class="tags"><span class="tag">웹</span><span class="tag">React</span></div>
+      </article>
+
+      <article class="card" data-category="실험" data-date="202604" data-views="63">
+        <div class="emoji">🪼</div>
+        <div class="title">Mood Aquarium</div>
+        <div class="desc">기분에 따라 작은 해양 생물이 떠다니는 기록 실험.</div>
+        <div class="meta">2026.04 · 3일</div>
+        <div class="tags"><span class="tag">실험</span><span class="tag">Canvas</span></div>
+      </article>
+
+      <article class="card" data-category="툴" data-date="202604" data-views="114">
+        <div class="emoji">🐙</div>
+        <div class="title">OTEW Timer</div>
+        <div class="desc">짧은 집중과 빠른 실행을 위한 타이머 툴.</div>
+        <div class="meta">2026.04 · 2일</div>
+        <div class="tags"><span class="tag">툴</span><span class="tag">웹</span></div>
+      </article>
+
+      <article class="card" data-category="웹" data-date="202603" data-views="48"><div class="emoji">🐡</div><div class="title">Weekly Notes</div><div class="desc">매주 만든 것들을 짧게 기록하는 로그.</div></article>
+      <article class="card" data-category="네이티브" data-date="202603" data-views="91"><div class="emoji">🦀</div><div class="title">Pocket Habit</div><div class="desc">작은 행동을 쌓아가는 네이티브 실험.</div></article>
+      <article class="card" data-category="웹" data-date="202602" data-views="57"><div class="emoji">🐬</div><div class="title">Mini Landing</div><div class="desc">하루 만에 만드는 초소형 랜딩 페이지.</div></article>
+      <article class="card" data-category="툴" data-date="202602" data-views="70"><div class="emoji">🦐</div><div class="title">Snippet Box</div><div class="desc">자주 쓰는 코드 스니펫 보관함.</div></article>
+      <article class="card" data-category="실험" data-date="202601" data-views="42"><div class="emoji">🐠</div><div class="title">Idea Seed</div><div class="desc">떠오른 아이디어를 빠르게 심어두는 곳.</div></article>
+      <article class="card" data-category="실험" data-date="202601" data-views="77"><div class="emoji">🐋</div><div class="title">Tiny Flow</div><div class="desc">작은 사용자 흐름을 테스트하는 프로토타입.</div></article>
+    </section>
+      <section style="margin-top:56px;">
+      <h2 style="margin:0 0 10px;font-size:28px;">함께 만들어요 💬</h2>
+      <p style="margin:0 0 24px;color:#4c718a;line-height:1.7;max-width:760px;">
+        작은 서비스 아이디어, 빠른 MVP, 프로토타입이 필요하다면 편하게 이야기해주세요.
+        아래처럼 알려주시면 더 빠르게 방향을 잡을 수 있어요.
+      </p>
+
+      <div style="max-width:720px;background:#bfe9ff;border-radius:28px;padding:22px 18px;border:1px solid #d9f3ff;box-shadow:0 8px 24px rgba(22,51,74,.05);">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="align-self:flex-start;background:white;padding:12px 14px;border-radius:18px 18px 18px 6px;max-width:78%;line-height:1.6;font-size:14px;">
+            안녕하세요. 어떤 걸 만들고 싶으세요? 🐠
+          </div>
+
+          <div style="align-self:flex-end;background:#fff9c8;padding:12px 14px;border-radius:18px 18px 6px 18px;max-width:78%;line-height:1.6;font-size:14px;">
+            작은 커뮤니티용 웹 서비스를 만들고 싶어요. 사용자가 간단하게 모임을 만들고 참여할 수 있으면 좋겠어요.
+          </div>
+
+          <div style="align-self:flex-start;background:white;padding:12px 14px;border-radius:18px 18px 18px 6px;max-width:78%;line-height:1.6;font-size:14px;">
+            어떤 문제를 해결하고 싶으신가요?
+          </div>
+
+          <div style="align-self:flex-end;background:#fff9c8;padding:12px 14px;border-radius:18px 18px 6px 18px;max-width:78%;line-height:1.6;font-size:14px;">
+            기존에는 단톡방에서 일정 관리가 어렵고 참여 인원이 자주 헷갈려요. 조금 더 정리된 흐름이 필요해요.
+          </div>
+
+          <div style="align-self:flex-start;background:white;padding:12px 14px;border-radius:18px 18px 18px 6px;max-width:78%;line-height:1.6;font-size:14px;">
+            언제쯤 필요하신가요? 지금 어느 정도 준비되어 있나요?
+          </div>
+
+          <div style="align-self:flex-end;background:#fff9c8;padding:12px 14px;border-radius:18px 18px 6px 18px;max-width:78%;line-height:1.6;font-size:14px;">
+            3주 안에 프로토타입이 있으면 좋겠어요. 기능 정리는 대략 되어 있고 간단한 화면 스케치도 있어요.
+          </div>
+
+          <div style="align-self:flex-start;background:white;padding:12px 14px;border-radius:18px 18px 18px 6px;max-width:78%;line-height:1.6;font-size:14px;">
+            참고하고 있는 서비스가 있으면 함께 보내주세요. 그러면 더 빠르게 방향을 맞출 수 있어요 ✨
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const chips = document.querySelectorAll('.chip');
+    const grid = document.getElementById('projectGrid');
+    const modal = document.getElementById('projectModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalEmoji = document.getElementById('modalEmoji');
+    const modalNote = document.getElementById('modalNote');
+    const modalLink = document.getElementById('modalLink');
+    const modalClose = document.getElementById('modalClose');
+
+    let activeCategory = '전체';
+
+    function renderProjects() {
+      const keyword = searchInput.value.toLowerCase();
+      const cards = Array.from(grid.querySelectorAll('.card'));
+
+      cards.forEach(card => {
+        const title = card.querySelector('.title')?.textContent.toLowerCase() || '';
+        const desc = card.querySelector('.desc')?.textContent.toLowerCase() || '';
+        const category = card.dataset.category;
+
+        const matchCategory = activeCategory === '전체' || category === activeCategory;
+        const matchSearch = title.includes(keyword) || desc.includes(keyword);
+
+        card.style.display = matchCategory && matchSearch ? '' : 'none';
+      });
+
+      const visible = cards.filter(card => card.style.display !== 'none');
+
+      visible.sort((a, b) => {
+        if (sortSelect.value === '조회수 높은 순') {
+          return Number(b.dataset.views) - Number(a.dataset.views);
+        }
+        return Number(b.dataset.date) - Number(a.dataset.date);
+      });
+
+      visible.forEach(card => grid.appendChild(card));
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeCategory = chip.textContent.trim();
+        renderProjects();
+      });
+    });
+
+    searchInput.addEventListener('input', renderProjects);
+    sortSelect.addEventListener('change', renderProjects);
+
+    grid.addEventListener('click', (event) => {
+      const card = event.target.closest('.card');
+      if (!card) return;
+
+      const title = card.querySelector('.title')?.textContent || '';
+      const desc = card.querySelector('.desc')?.textContent || '';
+      const emoji = card.querySelector('.emoji')?.textContent || '🐠';
+
+      modalTitle.textContent = title;
+      modalDesc.textContent = desc;
+      modalEmoji.textContent = emoji;
+      modalNote.textContent = `${title} 프로젝트는 빠르게 아이디어를 실험하고 실제 사용 흐름을 확인하기 위해 만들었습니다. 무엇을 만들었는지보다 어떤 문제를 풀고 싶은지, 어떤 방식으로 짧은 주기 안에 구현했는지를 기록하는 작업 메모입니다.`;
+      modalLink.href = '#';
+      modal.classList.add('open');
+    });
+
+    modalClose.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) modal.classList.remove('open');
+    });
+
+    renderProjects();
+  </script>
+  <div id="projectModal" class="modal">
+    <div class="modal-panel">
+      <div>
+        <div id="modalEmoji" class="emoji">🐠</div>
+        <h3 id="modalTitle" style="margin:10px 0 8px;font-size:26px;"></h3>
+        <p id="modalDesc" style="margin:0;color:#56778d;line-height:1.7;"></p>
+        <a id="modalLink" class="modal-link" href="#" target="_blank">프로젝트 보기</a>
+      </div>
+      <div>
+        <button id="modalClose" class="modal-close">닫기</button>
+        <h4 style="margin:16px 0 12px;font-size:18px;">작업 메모</h4>
+        <p id="modalNote" style="margin:0;color:#4c718a;line-height:1.8;"></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
